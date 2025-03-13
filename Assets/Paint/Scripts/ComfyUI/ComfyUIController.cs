@@ -326,43 +326,6 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
                     Debug.Log($"替换图像路径为: {imagePath}");
                 }
             }
-
-            // 替换正向提示词
-            if (classType == "CLIPTextEncode" && node["_meta"]?["title"]?.ToString() == "CLIP文本编码器")
-            {
-                // 检查是否为正向提示词节点 (通常是第一个CLIP编码器)
-                if (!node["inputs"]["text"].ToString().ToLower().Contains("lowres") &&
-                    !node["inputs"]["text"].ToString().ToLower().Contains("bad"))
-                {
-                    node["inputs"]["text"] = prompt;
-                    Debug.Log($"替换正向提示词: {prompt}");
-                }
-                // 检查是否为负向提示词节点 (通常包含negative关键词)
-                else if (node["inputs"]["text"].ToString().ToLower().Contains("lowres") ||
-                         node["inputs"]["text"].ToString().ToLower().Contains("bad"))
-                {
-                    node["inputs"]["text"] = negativePrompt;
-                    Debug.Log($"替换负向提示词: {negativePrompt}");
-                }
-            }
-
-            // 替换采样器设置
-            if (classType == "KSampler")
-            {
-                if (node["inputs"] != null)
-                {
-                    if (node["inputs"]["steps"] != null)
-                        node["inputs"]["steps"] = steps;
-
-                    if (node["inputs"]["cfg"] != null)
-                        node["inputs"]["cfg"] = cfgScale;
-
-                    if (node["inputs"]["seed"] != null && seed != -1)
-                        node["inputs"]["seed"] = seed;
-
-                    Debug.Log($"替换采样器参数: 步数={steps}, CFG={cfgScale}, 种子={seed}");
-                }
-            }
         }
     }
 
