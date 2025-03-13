@@ -13,7 +13,7 @@ public class MainController : SingletonMonoBehaviour<MainController>
         Application.targetFrameRate = 60;
 
 #if !UNITY_EDITOR
-        initWait =new WaitForSeconds(0.5f);
+        initWait =new WaitForSeconds(1f);
 #else
         initWait = new WaitForSeconds(0.1f);
 #endif

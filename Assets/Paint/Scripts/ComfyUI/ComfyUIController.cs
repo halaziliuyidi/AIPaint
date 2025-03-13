@@ -67,7 +67,7 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
         // 加载工作流
         LoadWorkflows();
 
-        CheckServerStatus((State)=>
+        CheckServerStatus((State) =>
         {
             onConnectedServer?.Invoke(State);
         }
@@ -95,7 +95,7 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
         bool isConnected = false;
 
         Debug.Log($"开始检查ComfyUI服务器状态，最大重试次数: {maxRetries}，重试间隔: {retryIntervalSeconds}秒");
-
+        LogShowLoadingPanel("正在检查ComfyUI服务器状态");
         while (!isConnected && retryCount < maxRetries)
         {
             // 创建请求（在try块外）
@@ -130,18 +130,21 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
                     }
                     catch (Exception ex)
                     {
+                        LogShowLoadingPanel("解析服务器状态时出错");
                         Debug.LogWarning($"解析服务器状态时出错: {ex.Message}");
                     }
                 }
                 else
                 {
                     retryCount++;
+                    LogShowLoadingPanel($"ComfyUI服务器连接失败，尝试重连中... (尝试 {retryCount}/{maxRetries})");
                     Debug.LogWarning($"ComfyUI服务器连接失败 (尝试 {retryCount}/{maxRetries}): {request.error}");
                 }
             }
             catch (Exception e)
             {
                 retryCount++;
+                LogShowLoadingPanel($"ComfyUI服务器连接失败，尝试重连中... (尝试 {retryCount}/{maxRetries})");
                 Debug.LogError($"检查服务器状态时出错 (尝试 {retryCount}/{maxRetries}): {e.Message}");
             }
             finally
@@ -162,12 +165,20 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
         if (isConnected)
         {
             Debug.Log("ComfyUI服务器状态检查成功");
-            callback?.Invoke(true);
+
+            UnityMainThreadDispatcher.Instance.Enqueue(() =>
+            {
+                callback?.Invoke(true);
+            });
         }
         else
         {
+            LogShowLoadingPanel($"ComfyUI服务器状态检查失败，已达到最大重试次数 ({maxRetries})");
             Debug.LogError($"ComfyUI服务器状态检查失败，已达到最大重试次数 ({maxRetries})");
-            callback?.Invoke(false);
+            UnityMainThreadDispatcher.Instance.Enqueue(() =>
+            {
+                callback?.Invoke(false);
+            });
         }
     }
     #endregion
@@ -643,7 +654,7 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
     #endregion
 
 
-#region Tools
+    #region Tools
     /// <summary>
     /// 加载单个纹理的协程
     /// </summary>
@@ -670,7 +681,15 @@ public class ComfyUIController : SingletonMonoBehaviour<ComfyUIController>
             callback?.Invoke(texture);
         }
     }
-#endregion
+
+    private void LogShowLoadingPanel(string message)
+    {
+        UnityMainThreadDispatcher.Instance.Enqueue(() =>
+        {
+            LoadingController.Instance.ShowLoading(message);
+        });
+    }
+    #endregion
 
     /// <summary>
     /// 设置生成参数

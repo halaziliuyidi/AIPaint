@@ -1,23 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using MFramework;
 using TMPro;
 using UnityEngine;
 
 public class LoadingController : SingletonMonoBehaviour<LoadingController>
 {
+    public GameObject loadingPanel;
+
     public TextMeshProUGUI messageText;
 
     public override void Initialized()
     {
         base.Initialized();
+        HideLoading();
     }
 
     public void ShowLoading(string message = "Loading...")
     {
-        if(this.gameObject.activeSelf == false)
+        if(this.loadingPanel.activeSelf == false)
         {
-            this.gameObject.SetActive(true);
+            this.loadingPanel.SetActive(true);
         }
         if (messageText != null)
         {
@@ -27,9 +28,9 @@ public class LoadingController : SingletonMonoBehaviour<LoadingController>
 
     public void HideLoading()
     {
-        if (this.gameObject.activeSelf == true)
+        if (this.loadingPanel.activeSelf == true)
         {
-            this.gameObject.SetActive(false);
+            this.loadingPanel.SetActive(false);
         }
     }
 
