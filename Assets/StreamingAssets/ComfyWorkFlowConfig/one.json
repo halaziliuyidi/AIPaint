@@ -1,0 +1,243 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": {
+        "content": "v1-5-pruned-emaonly-fp16.safetensors",
+        "image": null
+      },
+      "example": "[none]"
+    },
+    "class_type": "CheckpointLoader|pysssss",
+    "_meta": {
+      "title": "Checkpoint加载器(pysss)"
+    }
+  },
+  "2": {
+    "inputs": {
+      "lora_name": {
+        "content": "wangximeng_20240206225310-000003.safetensors",
+        "image": null
+      },
+      "strength_model": 1,
+      "strength_clip": 1,
+      "example": "[none]",
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "LoraLoader|pysssss",
+    "_meta": {
+      "title": "LoRA加载器(pysss)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "text": [
+        "44",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "9": {
+    "inputs": {
+      "text": [
+        "43",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "12": {
+    "inputs": {
+      "text": [
+        "43",
+        0
+      ],
+      "PreviewTextNode_1": "NSFW,blurry,low quality,lowres,monochrome,bad proportions,out of focus,"
+    },
+    "class_type": "PreviewTextNode",
+    "_meta": {
+      "title": "预览文本"
+    }
+  },
+  "14": {
+    "inputs": {
+      "samples": [
+        "22",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "22": {
+    "inputs": {
+      "seed": 1020591102099731,
+      "steps": 20,
+      "cfg": 7,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "2",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "53",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "K采样器"
+    }
+  },
+  "39": {
+    "inputs": {
+      "images": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "预览图像"
+    }
+  },
+  "43": {
+    "inputs": {
+      "from_translate": "chinese (simplified)",
+      "to_translate": "english",
+      "add_proxies": false,
+      "proxies": "",
+      "auth_data": "",
+      "service": "GoogleTranslator",
+      "text": "NSFW,blurry,low quality,lowres,monochrome,bad proportions,out of focus,",
+      "Show proxy": "proxy_hide",
+      "Show authorization": "authorization_hide"
+    },
+    "class_type": "DeepTranslatorTextNode",
+    "_meta": {
+      "title": "翻译文本(高级)"
+    }
+  },
+  "44": {
+    "inputs": {
+      "from_translate": "chinese (simplified)",
+      "to_translate": "english",
+      "add_proxies": false,
+      "proxies": "",
+      "auth_data": "",
+      "service": "GoogleTranslator",
+      "text": "mountain,river,wangximeng,太阳",
+      "Show proxy": "proxy_hide",
+      "Show authorization": "authorization_hide"
+    },
+    "class_type": "DeepTranslatorTextNode",
+    "_meta": {
+      "title": "翻译文本(高级)"
+    }
+  },
+  "47": {
+    "inputs": {
+      "text": [
+        "44",
+        0
+      ],
+      "PreviewTextNode_0": "mountain,river,wangximeng,sun"
+    },
+    "class_type": "PreviewTextNode",
+    "_meta": {
+      "title": "预览文本"
+    }
+  },
+  "52": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "width": 512,
+      "height": 512,
+      "crop": "disabled",
+      "image": [
+        "54",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "图像缩放"
+    }
+  },
+  "53": {
+    "inputs": {
+      "pixels": [
+        "52",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "54": {
+    "inputs": {
+      "image": "2025-03-12-17-48-10.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "55": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  }
+}
