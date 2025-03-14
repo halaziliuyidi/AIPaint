@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 using MFramework;
+using System.IO;
 
 public class AITextureController : SingletonMonoBehaviour<AITextureController>
 {
@@ -47,6 +48,44 @@ public class AITextureController : SingletonMonoBehaviour<AITextureController>
 
         string textureName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         await textureSave.SaveTextureToFolderAsync(texture2D, savePath, textureName, TextureSave.ImageFormat.PNG, 75, saveSuccessfull);
+    }
+
+    public async void SaveTexture(string _path, RenderTexture renderTexture, Action<string> saveSuccessfull)
+    {
+        if (!Directory.Exists(_path))
+        {
+            Directory.CreateDirectory(_path);
+        }
+
+        // 异步读取 GPU 数据，返回 Color32 数组
+        Color32[] pixels = await ReadRenderTextureAsync(renderTexture);
+        if (pixels == null)
+        {
+            Debug.LogError("GPU readback error");
+            return;
+        }
+
+        // 白底混合：对于每个像素，以白色为背景混合
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            Color32 src = pixels[i];
+            // 归一化 alpha（0~1）
+            float a = src.a / 255f;
+            // 混合公式：final = white*(1 - a) + src*a
+            // white 为 (255,255,255)
+            byte r = (byte)Mathf.Clamp(Mathf.RoundToInt(255 * (1 - a) + src.r * a), 0, 255);
+            byte g = (byte)Mathf.Clamp(Mathf.RoundToInt(255 * (1 - a) + src.g * a), 0, 255);
+            byte b = (byte)Mathf.Clamp(Mathf.RoundToInt(255 * (1 - a) + src.b * a), 0, 255);
+            pixels[i] = new Color32(r, g, b, 255);
+        }
+
+        // 创建 Texture2D（RGBA32 格式）并设置像素数据
+        Texture2D texture2D = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
+        texture2D.SetPixels32(pixels);
+        texture2D.Apply();
+
+        string textureName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        await textureSave.SaveTextureToFolderAsync(texture2D, _path, textureName, TextureSave.ImageFormat.PNG, 75, saveSuccessfull, true);
     }
 
     /// <summary>

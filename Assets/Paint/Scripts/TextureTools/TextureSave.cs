@@ -73,7 +73,7 @@ public class TextureSave
     /// Asynchronously saves a texture to the specified folder
     /// </summary>
     public async Task<string> SaveTextureToFolderAsync(Texture2D texture, string folderPath, string fileName,
-        ImageFormat format = ImageFormat.PNG, int quality = 75,Action<string> saveSuccessfull=null)
+        ImageFormat format = ImageFormat.PNG, int quality = 75, Action<string> saveSuccessfull = null, bool onlySave = false)
     {
         // Convert on main thread
         byte[] bytes = format switch
@@ -108,7 +108,14 @@ public class TextureSave
             }
         });
         Debug.Log($"Saved texture to: {filePath}");
-        saveSuccessfull?.Invoke(filePath+" [input]");
+        if (!onlySave)
+        {
+            saveSuccessfull?.Invoke(filePath + " [input]");
+        }
+        else
+        {
+            saveSuccessfull?.Invoke(filePath);
+        }
         return filePath;
     }
 

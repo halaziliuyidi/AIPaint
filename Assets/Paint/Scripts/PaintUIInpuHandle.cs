@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -41,10 +43,35 @@ public class PaintUIInpuHandle : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
         if (painting != null && painting.texRender != null)
         {
-            AITextureController.Instance.SaveTexture(painting.texRender,(imageName)=>
+            /* AITextureController.Instance.SaveTexture(painting.texRender, (imageName) =>
             {
                 Debug.Log($"Image is ready, image name is: {imageName}, now generate image");
                 ComfyUIController.Instance.GenerateImage(imageName);
+            }); */
+
+            // 保存图片
+            // Create directory if it doesn't exist
+            string savePath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "PaintImage");
+
+            AITextureController.Instance.SaveTexture(savePath, painting.texRender, (imagepath) =>
+            {
+                Debug.Log($"Image is ready, image path is: {imagepath}, now upload image");
+                //ComfyUIController.Instance.GenerateImage(imageName);
+
+                // 上传图片
+                ComfyUIController.Instance.UploadImage(imagepath, (state, name) =>
+                {
+                    if (state)
+                    {
+                        string inputStr = name + " [input]";
+                        ComfyUIController.Instance.GenerateImage(inputStr);
+                    }
+                    else
+                    {
+
+                    }
+                    Debug.Log($"Image is uploaded, name is: {name}");
+                });
             });
         }
     }

@@ -11,7 +11,6 @@ public class LoadingController : SingletonMonoBehaviour<LoadingController>
     public override void Initialized()
     {
         base.Initialized();
-        HideLoading();
     }
 
     public void ShowLoading(string message = "Loading...")
